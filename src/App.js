@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import ConnectionInput from './components/ConnectionInput';
+import InputBox from "./components/InputBox";
+import NodeInput from './components/NodeInput';
+import DenseTable from './components/tabelComponent';
+import labels from "./labels/labelObj";
 
-function App() {
+const App = ()=> {
+   
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App-header">
+      <div>
+        <InputBox props={{...labels.supplierLabels,isSupplier:true}}/>
+        <InputBox props={{...labels.reciverLabels,isSupplier:false}}/>
+        <NodeInput props={labels.nodeLabels}/>
+        <ConnectionInput props ={labels.connectionLabels}/>
+      </div>
+      <div className="container">
+        <DenseTable/>
+      </div>
     </div>
+    
   );
 }
 
