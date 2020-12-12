@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,19 +10,19 @@ import Paper from '@material-ui/core/Paper';
 import { Button } from '@material-ui/core';
 
 const axios = require('axios').default;
+
 export const data = {
   nodes:[],
   connections:[],
 }
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
 });
 
-const createData = (connection, cost)=> {
-  return { connection, cost};
+const createData = (connection, cost, amount)=> {
+  return { connection, cost, amount};
 }
 
 const rows = [
@@ -33,11 +33,23 @@ const rows = [
   createData("5->6", 356),
 ];
 
+
+
 const DenseTable=()=> {
   const classes = useStyles();
- 
+
+  async function setData() {
+    try {
+      const backendData = await axios.get('/data');
+      console.log(backendData);
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleButton = ()=>{
-    console.log(data)
+    console.log(data);
     axios.post('/data', {
       data: data,
     })
@@ -47,10 +59,11 @@ const DenseTable=()=> {
     .catch(function (error) {
       console.log(error);
     });
+
+      setData();
   }
-  useEffect(()=>{
-  })
- 
+  
+
   return (<div>
      <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">

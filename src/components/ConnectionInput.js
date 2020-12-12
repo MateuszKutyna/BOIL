@@ -11,14 +11,14 @@ const ConnectionInput = ({props})=>{
     
     useEffect(()=>{
        if(connection){
-           data.connections.push({from: connection.from, to: connection.to, cost: connection.cost});
+           data.connections.push({node1ID: connection.node1ID, node2ID: connection.node2ID, cost: connection.cost});
        }
     })
 
     const handleButton = ()=>{
         setConnection({
-            from:document.getElementById("FROM").value,
-            to:document.getElementById("TO").value,
+            node1ID:document.getElementById("FROM").value,
+            node2ID:document.getElementById("TO").value,
             cost:Number(document.getElementById("COST").value)
         })
     }
