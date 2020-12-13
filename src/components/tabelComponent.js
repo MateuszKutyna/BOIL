@@ -31,7 +31,7 @@ const createData = (connection, cost, amount, min, max)=> {
 
 async function setData() {
   try {
-    return await axios.get('/optimize');  
+    return await axios.get('http://localhost:8080//optimize');  
   } catch (error) {
     console.error(error);
   }
@@ -45,7 +45,7 @@ const DenseTable=()=> {
 
   const handleButton = ()=>{
     console.log(data);
-    axios.post('/optimize', {
+    axios.post('http://localhost:8080//optimize', {
       data: data,
     })
     .then(function (response) {
