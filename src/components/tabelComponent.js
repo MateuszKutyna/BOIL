@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 const axios = require('axios').default;
 
@@ -21,32 +21,27 @@ const useStyles = makeStyles({
   },
 });
 
-const createData = (connection, cost, amount)=> {
-  return { connection, cost, amount};
+
+
+const createData = (connection, cost, amount, min, max)=> {
+  return { connection, cost, amount, min, max};
 }
 
-const rows = [
-  createData("1->2", 159),
-  createData("2->3", 237),
-  createData("3->4", 262, 16.0),
-  createData("4->5", 3053),
-  createData("5->6", 356),
-];
 
 
+async function setData() {
+  try {
+    return await axios.get('/data');  
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const DenseTable=()=> {
   const classes = useStyles();
-
-  async function setData() {
-    try {
-      const backendData = await axios.get('/data');
-      console.log(backendData);
-      
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  let tempRows=[];
+  const [rows,setRows] = useState([]);
+  const [totalCost,setTotalCost] = useState();
 
   const handleButton = ()=>{
     console.log(data);
@@ -60,9 +55,15 @@ const DenseTable=()=> {
       console.log(error);
     });
 
-      setData();
+    const backendData = setData();
+
+    setTotalCost(backendData.transportCost);
+    
+    backendData.connections.map((a)=>{
+      tempRows.push(createData(`${a.node1ID}->${a.node2ID}`,a.cost,a.amount,a.min,a.max));
+    })
+    setRows(tempRows);
   }
-  
 
   return (<div>
      <TableContainer component={Paper}>
@@ -71,6 +72,9 @@ const DenseTable=()=> {
           <TableRow>
             <TableCell>Polaczenie</TableCell>
             <TableCell align="right">Koszt</TableCell>
+            <TableCell align="right">Ilosc</TableCell>
+            <TableCell align="right">Min</TableCell>
+            <TableCell align="right">Max</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -80,12 +84,16 @@ const DenseTable=()=> {
                 {row.connection}
               </TableCell>
               <TableCell align="right">{row.cost}</TableCell>
+              <TableCell align="right">{row.amount}</TableCell>
+              <TableCell align="right">{row.min}</TableCell>
+              <TableCell align="right">{row.max}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
     <Button onClick={handleButton}>Optymalizuj</Button>
+    <TextField label="F"></TextField>
    </div>
    
   );
