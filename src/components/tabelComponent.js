@@ -15,54 +15,126 @@ export const data = {
   nodes:[],
   connections:[],
 }
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
 });
 
+const exampledata= {
+  "nodes": [
+    {
+      "id": 1,
+      "type": "supplier",
+      "amount": 250
+    },
+    {
+      "id": 2,
+      "type": "supplier",
+      "amount": 300
+    },
+    /* {
+      "id": 3,
+      "type": "receiver",
+      "amount": 120
+    },
+    {
+      "id": 4,
+      "type": "receiver",
+      "amount": 250
+    },
+    {
+      "id": 5,
+      "type": "receiver",
+      "amount": 100
+    },
+    {
+      "id": 6,
+      "type": "transport"
+    } */
+  ],
+  "connections": [
+    {
+      "node1ID": 2,
+      "node2ID": 1,
+      "cost": 2
+    },
+   /*  {
+      "node1ID": 1,
+      "node2ID": 3,
+      "cost": 3,
+      "max": 50,
+      "min": 30
+    },
+    {
+      "node1ID": 1,
+      "node2ID": 6,
+      "cost": 5,
+      "max": 150
+    },
+    {
+      "node1ID": 2,
+      "node2ID": 6,
+      "cost": 6
+    },
+    {
+      "node1ID": 2,
+      "node2ID": 5,
+      "cost": 2
+    },
+    {
+      "node1ID": 6,
+      "node2ID": 3,
+      "cost": 5
+    },
+    {
+      "node1ID": 6,
+      "node2ID": 4,
+      "cost": 4
+    },
+    {
+      "node1ID": 6,
+      "node2ID": 5,
+      "cost": 1
+    },
+    {
+      "node1ID": 3,
+      "node2ID": 4,
+      "cost": 8
+    },
+    {
+      "node1ID": 4,
+      "node2ID": 5,
+      "cost": 4
+    } */
+  ]
+};
 
 
 const createData = (connection, cost, amount, min, max)=> {
   return { connection, cost, amount, min, max};
 }
 
-
-
-async function setData() {
-  try {
-    return await axios.get('http://localhost:8080//optimize');  
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 const DenseTable=()=> {
   const classes = useStyles();
   let tempRows=[];
   const [rows,setRows] = useState([]);
-  const [totalCost,setTotalCost] = useState();
-
+  console.log(data)
   const handleButton = ()=>{
-    console.log(data);
-    axios.post('http://localhost:8080//optimize', {
-      data: data,
-    })
+    axios.post('http://localhost:8080/optimize', 
+    data)
     .then(function (response) {
-      console.log(response);
+      response.data.connections.map((a)=>{
+        tempRows.push(createData(`${a.node1ID}->${a.node2ID}`,a.cost,a.amount,a.min,a.max));
+      });
+      tempRows.push(createData("TOTAL TRANSPORT COST",undefined,undefined,undefined,response.data.transportCost))
+      setRows(tempRows)
     })
     .catch(function (error) {
       console.log(error);
     });
-
-    const backendData = setData();
-
-    setTotalCost(backendData.transportCost);
     
-    backendData.connections.map((a)=>{
-      tempRows.push(createData(`${a.node1ID}->${a.node2ID}`,a.cost,a.amount,a.min,a.max));
-    })
-    setRows(tempRows);
   }
 
   return (<div>
@@ -93,7 +165,7 @@ const DenseTable=()=> {
       </Table>
     </TableContainer>
     <Button onClick={handleButton}>Optymalizuj</Button>
-    <TextField label="F"></TextField>
+
    </div>
    
   );
