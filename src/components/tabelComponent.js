@@ -34,7 +34,7 @@ const exampledata= {
       "type": "supplier",
       "amount": 300
     },
-    /* {
+    {
       "id": 3,
       "type": "receiver",
       "amount": 120
@@ -52,7 +52,7 @@ const exampledata= {
     {
       "id": 6,
       "type": "transport"
-    } */
+    }
   ],
   "connections": [
     {
@@ -60,7 +60,7 @@ const exampledata= {
       "node2ID": 1,
       "cost": 2
     },
-   /*  {
+    {
       "node1ID": 1,
       "node2ID": 3,
       "cost": 3,
@@ -107,7 +107,7 @@ const exampledata= {
       "node1ID": 4,
       "node2ID": 5,
       "cost": 4
-    } */
+    }
   ]
 };
 
